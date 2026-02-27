@@ -1,10 +1,10 @@
 "use client";
 const oauth_url = `http://localhost:8080/oauth2/authorization`;
-const tmp_url = `http://localhost:3000/oauth/callback/accessToken=bearer&refreshToken=bearer`;
+const tmp_url = `http://localhost:3000/oauth/callback?accessToken=bearer&refreshToken=bearer`;
 export default function page() {
   const handleLogin = (provider: "google" | "naver" | "kakao") => {
-    window.location.href = oauth_url;
-    // window.location.href = `${tmp_url}/${provider}`;
+    window.location.href = tmp_url;
+    // window.location.href = `${oauth_url}/${provider}`;
   };
   return (
     <div className="flex flex-col">
