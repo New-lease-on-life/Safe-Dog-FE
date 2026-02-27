@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
 
   const isPublic = pathname.startsWith("/login");
   // login 페이지로 Redirect
-  if (isPublic) {
+  if (!isPublic) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
