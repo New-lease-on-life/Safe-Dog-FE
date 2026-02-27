@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-          <main className="flex min-h-screen w-full max-w-xl flex-col items-center justify-between bg-white dark:bg-black sm:items-start">
+          <main className="flex min-h-screen w-full max-w-xl flex-col items-center bg-white dark:bg-black sm:items-start">
             {children}
           </main>
         </div>
