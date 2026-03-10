@@ -1,5 +1,9 @@
 "use client";
 export default function Home() {
+  const fetchAPI = async () => {
+    const response = fetch("http://3.37.178.116:8080/api/test");
+    console.log(response);
+  };
   async function handlePushTest() {
     try {
       if (!("Notification" in window)) {
@@ -40,6 +44,12 @@ export default function Home() {
         onClick={handlePushTest}
       >
         푸시 알림 테스트
+      </button>
+      <button
+        className="w-48 text-xl bg-gray-400 p-2 m-2 rounded-md text-white"
+        onClick={fetchAPI}
+      >
+        api call test
       </button>
     </div>
   );
