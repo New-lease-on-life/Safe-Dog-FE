@@ -1,9 +1,5 @@
 "use client";
 export default function Home() {
-  const fetchAPI = async () => {
-    const response = fetch("http://3.37.178.116:8080/api/test");
-    console.log(response);
-  };
   async function handlePushTest() {
     try {
       if (!("Notification" in window)) {
