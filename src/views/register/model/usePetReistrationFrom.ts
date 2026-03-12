@@ -38,9 +38,9 @@ export function usePetRegistrationForm() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
 
   const goNext = async () => {
-    const fields = STEP_FIELDS[currentStep];
-    const isValid = await form.trigger(fields);
-    if (!isValid) return;
+    // const fields = STEP_FIELDS[currentStep];
+    // const isValid = await form.trigger(fields);
+    // if (!isValid) return;
     setCurrentStep((prev) => Math.min(prev + 1, 3) as Step);
   };
 
