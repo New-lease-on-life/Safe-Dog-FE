@@ -1,6 +1,11 @@
 import { cookies } from "next/headers";
-import { RequestOptions } from "../lib/api";
-
+import { RequestOptions, apiClient } from "../lib/api";
+type LoginResponseType ={
+      grantType : string;
+      accessToken : string;
+      refreshToken : string;
+      accessTokenExpiresIn : number;
+}
 const getToken= async()=>{
       const cookieStore = await cookies();
       return cookieStore.get('accessToken')?.value;
@@ -30,26 +35,52 @@ const removeTokens = async()=>{
       cookieStore.delete('refreshToken');
 }
 
+const reissueToken = async (): Promise<string | null> => {
+  const cookieStore = await cookies()
+  const refreshToken = cookieStore.get('refreshToken')?.value
+  if (!refreshToken) return null
+
+  try {
+    const data = await apiClient<LoginResponseType>('/api/auth/reissue', {
+      method: 'POST',
+      token: refreshToken,
+    })
+    await setToken(data.accessToken, data.refreshToken, data.accessTokenExpiresIn)
+    return data.accessToken
+  } catch {
+    await removeTokens()
+    return null
+  }
+}
+const protechedFetch = async<T>(
+      endpoint : string,
+      options : RequestOptions
+      ):Promise<T> =>{
+            return apiClient<T>(endpoint, {
+                  ...options,
+                  onUnauthorized: reissueToken
+            })
+}
 export const serverApi = {
   get: async <T>(endpoint: string, options?: RequestOptions) => {
     const token = await getToken()
-    return apiClient<T>(endpoint, { ...options, method: 'GET', token })
+    return protechedFetch<T>(endpoint, { ...options, method: 'GET', token })
   },
   post: async <T>(endpoint: string, body: unknown, options?: RequestOptions) => {
     const token = await getToken()
-    return apiClient<T>(endpoint, { ...options, method: 'POST', body: JSON.stringify(body), token })
+    return protechedFetch<T>(endpoint, { ...options, method: 'POST', body: JSON.stringify(body), token })
   },
   put: async <T>(endpoint: string, body: unknown, options?: RequestOptions) => {
     const token = await getToken()
-    return apiClient<T>(endpoint, { ...options, method: 'PUT', body: JSON.stringify(body), token })
+    return protechedFetch<T>(endpoint, { ...options, method: 'PUT', body: JSON.stringify(body), token })
   },
   delete: async <T>(endpoint: string, options?: RequestOptions) => {
     const token = await getToken()
-    return apiClient<T>(endpoint, { ...options, method: 'DELETE', token })
+    return protechedFetch<T>(endpoint, { ...options, method: 'DELETE', token })
   },
   patch: async <T>(endpoint: string, body: unknown, options?: RequestOptions) => {
     const token = await getToken()
-    return apiClient<T>(endpoint, { ...options, method: 'PATCH', body: JSON.stringify(body), token })
+    return protechedFetch<T>(endpoint, { ...options, method: 'PATCH', body: JSON.stringify(body), token })
   },
   setToken,
 }

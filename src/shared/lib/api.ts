@@ -2,13 +2,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface RequestOptions extends RequestInit{
       token? : string;
+      onUnauthorized? : ()=> Promise<string|null>
 }
 
 export const apiClient = async<T>(
             endpoint : string,
-            options : RequestOptions={}
+            options : RequestOptions={},
+            reissue= true
             ): Promise<T> =>{
-      const {token, ...fetchOptions} = options;
+      const {token,onUnauthorized, ...fetchOptions} = options;
 
       const headers : HeadersInit = {
             "Content-Type" : "application/json",
@@ -20,6 +22,14 @@ export const apiClient = async<T>(
             ...fetchOptions,
             headers
       })
+
+      if (response.status === 401 && reissue && onUnauthorized) {
+      const newToken = await onUnauthorized()
+      if (newToken) {
+            return apiClient<T>(endpoint, { ...options, token: newToken }, false)
+      }
+            throw new Error('SESSION EXPIRED')
+      }
 
       if (!response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
