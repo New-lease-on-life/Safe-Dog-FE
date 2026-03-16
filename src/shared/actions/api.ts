@@ -1,19 +1,25 @@
-'use server'
 import { cookies } from "next/headers";
 import { apiClient,RequestOptions } from "../lib/api";
 
 const getToken= async()=>{
       const cookieStore = await cookies();
-      return cookieStore.get('token')?.value;
+      return cookieStore.get('accessToken')?.value;
 }
 
-const setToken = async (token: string) => {
+const setToken = async (accessToken: string, refreshToken : string, accessTokenExpiresIn: number) => {
   const cookieStore = await cookies()
-  cookieStore.set('token', token, {
+  cookieStore.set('accessToken', accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24,
+    maxAge: accessTokenExpiresIn,
+    path: '/',
+  })
+  cookieStore.set('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: accessTokenExpiresIn * 7,
     path: '/',
   })
 }
