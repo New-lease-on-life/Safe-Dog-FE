@@ -29,20 +29,16 @@ const apiClient = async<T>(
 }
 
 export const api = {
-      get: <T>(endpoint : string, options? : RequestOptions)=>{
-            apiClient<T>(endpoint, {...options,method:'GET'})
-      },
-      post: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>{
-            apiClient<T>(endpoint, {...options,method:'POST', body:JSON.stringify(body)})
-      },
-      put: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>{
-            apiClient<T>(endpoint, {...options,method:'PUT', body:JSON.stringify(body)})
-      },
-      delete: <T>(endpoint : string, options? : RequestOptions)=>{
-            apiClient<T>(endpoint, {...options,method:'DELETE'})
-      },
-      patch: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>{
+      get: <T>(endpoint : string, options? : RequestOptions)=>
+            apiClient<T>(endpoint, {...options,method:'GET'}),
+      post: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>
+            apiClient<T>(endpoint, {...options,method:'POST', body:JSON.stringify(body)}),
+      put: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>
+            apiClient<T>(endpoint, {...options,method:'PUT', body:JSON.stringify(body)}),
+      delete: <T>(endpoint : string, options? : RequestOptions)=>
+            apiClient<T>(endpoint, {...options,method:'DELETE'}),
+      patch: <T>(endpoint : string, body : unknown, options? : RequestOptions)=>
             apiClient<T>(endpoint, {...options,method:'PATCH', body:JSON.stringify(body)})
-      },
+      ,
       
 }
