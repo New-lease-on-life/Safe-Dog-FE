@@ -1,4 +1,5 @@
-export type TabStateType = "basic" | "disease" | "create";
+export type CareType = "basic" | "disease";
+export type ModeType = "select" | "create";
 
 export type BasicCareType =
   | "meal"
@@ -23,7 +24,8 @@ export type DiseaseCareType =
   | "other";
 
 export interface NoteState {
-  Tab: TabStateType;
+  Care: CareType;
+  Mode: ModeType;
   selectedBasicItems: BasicCareType[];
   selectedDiseaseItems: DiseaseCareType[];
 }
