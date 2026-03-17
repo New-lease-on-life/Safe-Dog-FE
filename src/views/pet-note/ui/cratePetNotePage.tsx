@@ -45,12 +45,12 @@ export const CreatePetNotePage = () => {
         title={"체크리스트 입력"}
         left={<PrevButton mode={mode} setMode={setMode} />}
       />
-      <div className="flex w-full h-12 px-4 text-center items-center">
+      <div className="flex w-full h-16 px-4 text-center items-center">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setCareTab(key)}
-            className={`flex-1 h-full flex items-center justify-center border-b-2 transition colors ${
+            className={`flex-1 h-16  flex items-center justify-center border-b-2 transition colors ${
               careTab === key
                 ? "border-black font-semibold"
                 : "border-gray-300 font-normal opacity-70"
@@ -60,15 +60,17 @@ export const CreatePetNotePage = () => {
           </button>
         ))}
       </div>
-      <div className="flex ml-auto m-4">
-        <Button
-          onClick={() => setMode("select")}
-          className="w-28 bg-gray-200 text-gray-600 rounded-full"
-        >
-          <Plus />
-          항목 추가
-        </Button>
-      </div>
+      {mode === "create" && (
+        <div className="flex ml-auto m-4">
+          <Button
+            onClick={() => setMode("select")}
+            className="w-28 bg-gray-200 text-gray-600 rounded-full"
+          >
+            <Plus />
+            항목 추가
+          </Button>
+        </div>
+      )}
       {mode === "select" && careTab === "basic" && <SelectBasicCare />}
       {mode === "select" && careTab === "disease" && <div>질병케어 고르기</div>}
       {mode === "create" && careTab === "basic" && <div>기본케어 생성</div>}

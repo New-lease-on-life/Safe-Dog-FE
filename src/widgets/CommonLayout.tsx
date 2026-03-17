@@ -9,7 +9,7 @@ export const CommonLayout = ({
 }: ICommonLayoutProps) => {
   return (
     <div
-      className={`relative flex flex-col w-full h-screen ${backgroundColor}`}
+      className={`relative flex flex-col w-full min-h-screen ${backgroundColor}`}
     >
       {children}
     </div>

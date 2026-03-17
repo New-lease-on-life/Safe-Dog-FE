@@ -16,9 +16,9 @@ export const SelectBasicCare = () => {
   const isSelected = (key: BasicCareType) => selected.includes(key);
 
   return (
-    <div className="m-6">
+    <div className="p-6">
       <div className="flex my-4">
-        <div className="flex gap-2 mb-2">
+        <div className="flex ">
           가이드 보기 <Info width="16" />
         </div>
         <div className="text-muted-foreground text-sm flex ml-auto">
@@ -26,13 +26,13 @@ export const SelectBasicCare = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 overflow-y-auto scrollbar-none max-h-[calc(100vh-200px)]">
         {BASIC_CARE_ITEMS.map((e) => (
           <Card
             key={e.key}
             onClick={() => toggle(e.key)}
-            className={`flex flex-col items-center cursor-pointer transition-colors border-2 ${
-              isSelected(e.key) ? "border-black" : "border-transparent"
+            className={`flex flex-col items-center cursor-pointer transition-colors box-border border-2 ${
+              isSelected(e.key) ? "border-black" : "border-gray-100"
             }`}
           >
             <div className="bg-gray-400 w-8 h-8 rounded-full" />
@@ -44,7 +44,7 @@ export const SelectBasicCare = () => {
         ))}
       </div>
 
-      <div className="sticky bottom-6 left-0 right-0 flex justify-center px-6">
+      {/* <div className="sticky bottom-6 left-0 right-0 flex justify-center px-6">
         <Button
           disabled={selected.length === 0}
           className="w-full h-12 rounded-full"
@@ -53,7 +53,7 @@ export const SelectBasicCare = () => {
             ? `${selected.length}개 선택됨`
             : "항목을 선택해주세요"}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
