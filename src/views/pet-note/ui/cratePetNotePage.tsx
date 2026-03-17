@@ -3,23 +3,53 @@ import { CommonLayout } from "@/widgets/CommonLayout";
 import { Header } from "@/widgets/Header";
 import { useCreateNoteState } from "../model/useCreateNoteState";
 import { TabType } from "../model/useCreateNoteState";
-
+import { ModeType } from "../model/type";
+import { Button } from "@/shared/ui/button";
+import { Plus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+interface PrevButtonProps {
+  mode: ModeType;
+  setMode: (type: ModeType) => void;
+}
 const TABS: { key: TabType; label: string }[] = [
   { key: "basic", label: "기본케어" },
   { key: "disease", label: "질병케어" },
 ];
+
+const PrevButton = ({ mode, setMode }: PrevButtonProps) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (mode === "select") {
+      setMode("create");
+    } else {
+      router.back();
+    }
+  };
+
+  return (
+    <button onClick={handleClick}>
+      <ArrowLeft />
+    </button>
+  );
+};
+
 export const CreatePetNotePage = () => {
-  const { tab, setTab } = useCreateNoteState();
+  const { mode, setMode, careTab, setCareTab } = useCreateNoteState();
   return (
     <CommonLayout>
-      <Header title={"체크리스트 입력"} />
+      <Header
+        title={"체크리스트 입력"}
+        left={<PrevButton mode={mode} setMode={setMode} />}
+      />
       <div className="flex w-full h-12 px-4 text-center items-center">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
-            onClick={() => setTab(key)}
+            onClick={() => setCareTab(key)}
             className={`flex-1 h-full flex items-center justify-center border-b-2 transition colors ${
-              tab === key
+              careTab === key
                 ? "border-black font-semibold"
                 : "border-gray-300 font-normal opacity-70"
             }`}
@@ -28,6 +58,19 @@ export const CreatePetNotePage = () => {
           </button>
         ))}
       </div>
+      <div className="flex ml-auto m-4">
+        <Button
+          onClick={() => setMode("select")}
+          className="w-28 bg-gray-200 text-gray-600 rounded-full"
+        >
+          <Plus />
+          항목 추가
+        </Button>
+      </div>
+      {mode === "select" && careTab === "basic" && <div>기본케어 고르기</div>}
+      {mode === "select" && careTab === "disease" && <div>질병케어 고르기</div>}
+      {mode === "create" && careTab === "basic" && <div>기본케어 생성</div>}
+      {mode === "create" && careTab === "disease" && <div>질병케어 생성</div>}
     </CommonLayout>
   );
 };
