@@ -1,7 +1,7 @@
 "use client";
 
 import { Controller, useFormContext } from "react-hook-form";
-import { PetRegistrationFormValues } from "@/entities/pet/petRegistrationSchema";
+import { PetRegistrationFormValues } from "@/entities/pet/model/petRegistrationSchema";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/components/ui/input";
 import {

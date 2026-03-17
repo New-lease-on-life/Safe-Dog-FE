@@ -1,7 +1,5 @@
 "use client";
 export default function Home() {
-<<<<<<< HEAD
-=======
   const fetchAPI = async () => {
     try {
       const url = process.env.NEXT_PUBLIC_URL;
@@ -10,9 +8,8 @@ export default function Home() {
       console.log("status:", response.status);
     } catch (e) {
       console.error("fetch error:", e);
-    };
-  }
->>>>>>> ebd5a5cfde74ee1382f721e1d0e3cbea7e24cad3
+    }
+  };
   async function handlePushTest() {
     try {
       if (!("Notification" in window)) {

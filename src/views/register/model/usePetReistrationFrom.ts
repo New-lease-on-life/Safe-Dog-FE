@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   PetRegistrationFormValues,
   petRegistrationSchema,
-} from "@/entities/pet/petRegistrationSchema";
+} from "@/entities/pet/model/petRegistrationSchema";
 
 const STEPS = [1, 2, 3] as const;
 type Step = (typeof STEPS)[number];
