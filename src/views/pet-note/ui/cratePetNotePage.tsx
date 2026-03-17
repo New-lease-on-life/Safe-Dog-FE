@@ -8,6 +8,8 @@ import { Button } from "@/shared/ui/button";
 import { Plus } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { SelectBasicCare } from "./selectBasicCare";
+import { Select } from "radix-ui";
 interface PrevButtonProps {
   mode: ModeType;
   setMode: (type: ModeType) => void;
@@ -67,7 +69,7 @@ export const CreatePetNotePage = () => {
           항목 추가
         </Button>
       </div>
-      {mode === "select" && careTab === "basic" && <div>기본케어 고르기</div>}
+      {mode === "select" && careTab === "basic" && <SelectBasicCare />}
       {mode === "select" && careTab === "disease" && <div>질병케어 고르기</div>}
       {mode === "create" && careTab === "basic" && <div>기본케어 생성</div>}
       {mode === "create" && careTab === "disease" && <div>질병케어 생성</div>}
