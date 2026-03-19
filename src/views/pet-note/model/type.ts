@@ -6,7 +6,7 @@ export type BasicCareType =
   | "snack"
   | "supplement"
   | "water"
-  | "excretion"
+  | "pad"
   | "walk"
   | "weight"
   | "grooming"

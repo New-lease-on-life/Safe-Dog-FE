@@ -5,7 +5,7 @@ export const BASIC_CARE_ITEMS: { key: BasicCareType; label: string }[] = [
   { key: "snack", label: "간식" },
   { key: "supplement", label: "영양제" },
   { key: "water", label: "급수" },
-  { key: "excretion", label: "배변" },
+  { key: "pad", label: "배변" },
   { key: "walk", label: "산책" },
   { key: "weight", label: "체중" },
   { key: "grooming", label: "미용" },

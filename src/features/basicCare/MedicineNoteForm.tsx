@@ -15,10 +15,6 @@ import {
 import { Trash2, X, Image } from "lucide-react";
 import { toast } from "sonner";
 
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
-
 type MealTime = "아침" | "점심" | "저녁" | "직접입력";
 
 interface MedicineItem {
@@ -33,10 +29,6 @@ interface MedicineRecord {
   item: MedicineItem;
 }
 
-// ─────────────────────────────────────────────
-// Constants
-// ─────────────────────────────────────────────
-
 const MEAL_TIMES: MealTime[] = ["아침", "점심", "저녁", "직접입력"];
 
 const createEmptyMedicine = (): MedicineItem => ({
@@ -45,10 +37,6 @@ const createEmptyMedicine = (): MedicineItem => ({
   image: null,
   imagePreview: null,
 });
-
-// ─────────────────────────────────────────────
-// Main Component
-// ─────────────────────────────────────────────
 
 export const MedicineNoteForm = () => {
   const [selectedTime, setSelectedTime] = useState<MealTime | null>(null);
@@ -100,7 +88,6 @@ export const MedicineNoteForm = () => {
 
   return (
     <div className="border border-gray-200 rounded-lg p-4 flex flex-col gap-4 bg-white">
-      {/* 헤더 */}
       <div className="flex items-center justify-between">
         <span className="font-semibold text-sm">💉 의약복용</span>
         <button className="text-gray-400">
@@ -108,7 +95,6 @@ export const MedicineNoteForm = () => {
         </button>
       </div>
 
-      {/* 시간대 */}
       <div className="flex flex-col gap-2">
         <span className="text-sm">시간대</span>
         <div className="grid grid-cols-4 gap-2">
@@ -135,7 +121,6 @@ export const MedicineNoteForm = () => {
         )}
       </div>
 
-      {/* 의약품 정보 입력 버튼 */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-gray-600">의약품 정보 (선택)</span>
         <button
@@ -145,8 +130,6 @@ export const MedicineNoteForm = () => {
           의약품 정보 입력
         </button>
       </div>
-
-      {/* 등록된 의약품 */}
       {registered && (
         <div className="flex items-center gap-2 py-2 border-t">
           <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 shrink-0 flex items-center justify-center">
@@ -198,8 +181,6 @@ export const MedicineNoteForm = () => {
           </button>
         </div>
       )}
-
-      {/* 복약 특이사항 */}
       <div className="flex flex-col gap-2">
         <span className="text-sm text-gray-600">복약 특이사항 (선택)</span>
         <Textarea
@@ -211,7 +192,6 @@ export const MedicineNoteForm = () => {
         />
       </div>
 
-      {/* 바텀시트 */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="bottom" className="rounded-t-xl px-5 pb-8">
           <div className="flex items-center justify-between py-4 mb-2">
