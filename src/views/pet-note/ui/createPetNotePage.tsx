@@ -18,6 +18,12 @@ import { PadNoteForm } from "@/features/basicCare/PadNoteForm";
 import { WaterNoteForm } from "@/features/basicCare/WaterNoteForm";
 import { WalkNoteForm } from "@/features/basicCare/WalkNoteForm";
 import { WeightNoteForm } from "@/features/basicCare/WeightNoteForm";
+import { DiseaseCareType } from "../model/type";
+import {
+  DiseaseCareForm,
+  DISEASE_TEMPLATES,
+} from "@/features/diseaseCare/diseaseCareForm";
+import { SelectDiseaseCare } from "./selectDiseaseCare";
 interface PrevButtonProps {
   mode: ModeType;
   setMode: (type: ModeType) => void;
@@ -35,6 +41,16 @@ const FORM_MAP: Record<string, React.ReactNode> = {
   water: <WaterNoteForm />,
   walk: <WalkNoteForm />,
   weight: <WeightNoteForm />,
+};
+
+const DISEASE_KEY_MAP: Record<DiseaseCareType, string> = {
+  heart: "heart",
+  kidney: "kidney",
+  cancer: "cancer",
+  eye: "eye",
+  cushing: "cushing",
+  arthritis: "arthritis",
+  other: "etc",
 };
 const PrevButton = ({ mode, setMode }: PrevButtonProps) => {
   const router = useRouter();
@@ -63,6 +79,7 @@ export const CreatePetNotePage = () => {
     activeBasicNotes,
     activeDiseaseNotes,
     toggleBasicNote,
+    toggleDiseaseNote,
   } = useCreateNoteState();
   return (
     <CommonLayout>
@@ -103,7 +120,13 @@ export const CreatePetNotePage = () => {
           onConfirm={() => setMode("create")}
         />
       )}
-      {mode === "select" && careTab === "disease" && <div>질병케어 고르기</div>}
+      {mode === "select" && careTab === "disease" && (
+        <SelectDiseaseCare
+          selected={activeDiseaseNotes}
+          toggle={toggleDiseaseNote}
+          onConfirm={() => setMode("create")}
+        />
+      )}
       {mode === "create" && careTab === "basic" && (
         <div className="flex flex-col gap-4 p-4">
           {activeBasicNotes.map((noteKey) => {
@@ -118,7 +141,18 @@ export const CreatePetNotePage = () => {
           })}
         </div>
       )}
-      {mode === "create" && careTab === "disease" && <div>질병케어 생성</div>}
+      {mode === "create" && careTab === "disease" && (
+        <div className="flex flex-col gap-4 p-4">
+          {activeDiseaseNotes.map((noteKey) => {
+            const templateKey = DISEASE_KEY_MAP[noteKey];
+            const template = DISEASE_TEMPLATES.find(
+              (t) => t.key === templateKey,
+            );
+            if (!template) return null;
+            return <DiseaseCareForm key={noteKey} template={template} />;
+          })}
+        </div>
+      )}
     </CommonLayout>
   );
 };
