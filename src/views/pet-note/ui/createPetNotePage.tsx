@@ -23,7 +23,6 @@ import {
   DISEASE_TEMPLATES,
 } from "@/features/diseaseCare/diseaseCareForm";
 import { SelectDiseaseCare } from "./selectDiseaseCare";
-
 export interface FormProps {
   onDelete: () => void;
   onDataChange: (data: unknown) => void;
@@ -91,7 +90,7 @@ export const CreatePetNotePage = () => {
     removeDiseaseNote,
     setBasicData,
     setDiseaseData,
-    submitPayload,
+    apiTemplates,
   } = useCreateNoteState();
   return (
     <CommonLayout>
@@ -184,7 +183,7 @@ export const CreatePetNotePage = () => {
       )}
       <Button
         onClick={() => {
-          console.log(submitPayload);
+          console.log(apiTemplates);
         }}
       >
         hi

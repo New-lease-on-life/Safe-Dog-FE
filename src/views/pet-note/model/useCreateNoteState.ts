@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { BasicCareType, DiseaseCareType, ModeType, CareType } from "./type";
+import { toApiTemplates } from "./toApiTemplates";
 export type TabType = "basic" | "disease";
 export const useCreateNoteState = () => {
   const [careTab, setCareTab] = useState<CareType>("basic");
@@ -54,17 +55,14 @@ export const useCreateNoteState = () => {
     setDiseaseFormData((prev) => ({ ...prev, [key]: data }));
   };
 
-  const submitPayload = useMemo(
-    () => ({
-      basicCares: activeBasicNotes.map((key) => ({
-        type: key,
-        data: basicFormData[key],
-      })),
-      diseaseCares: activeDiseaseNotes.map((key) => ({
-        type: key,
-        data: diseaseFormData[key],
-      })),
-    }),
+  const apiTemplates = useMemo(
+    () =>
+      toApiTemplates(
+        activeBasicNotes,
+        activeDiseaseNotes,
+        basicFormData,
+        diseaseFormData,
+      ),
     [activeBasicNotes, activeDiseaseNotes, basicFormData, diseaseFormData],
   );
 
@@ -81,6 +79,6 @@ export const useCreateNoteState = () => {
     removeDiseaseNote,
     setBasicData,
     setDiseaseData,
-    submitPayload,
+    apiTemplates,
   };
 };
