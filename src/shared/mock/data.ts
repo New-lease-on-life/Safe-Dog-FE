@@ -92,6 +92,7 @@ export const getMockCareLogs = (petId: number, date: string): CareLog[] => [
     version: 1,
     updatedAt: new Date().toISOString(),
     completed: true,
+    completedAt: "2026-03-22T11:07:00.000Z",
   },
   {
     id: 2,
@@ -124,6 +125,7 @@ export const getMockCareLogs = (petId: number, date: string): CareLog[] => [
     version: 1,
     updatedAt: new Date().toISOString(),
     completed: true,
+    completedAt: "2026-03-22T11:07:00.000Z",
   },
   {
     id: 4,
@@ -172,5 +174,6 @@ export const getMockCareLogs = (petId: number, date: string): CareLog[] => [
     version: 1,
     updatedAt: new Date().toISOString(),
     completed: true,
+    completedAt: "2026-03-22T11:07:00.000Z",
   },
 ];

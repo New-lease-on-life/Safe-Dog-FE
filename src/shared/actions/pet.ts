@@ -1,6 +1,7 @@
 "use server";
 import { serverApi } from "./api";
 import { MOCK_PETS, MOCK_USER, getMockCareLogs } from "../mock/data";
+import { string } from "zod";
 
 export type Pet = {
   id: number;
@@ -38,6 +39,7 @@ export type CareLog = {
   version: number;
   updatedAt: string;
   completed: boolean;
+  completedAt?: string;
 };
 
 export type User = {
