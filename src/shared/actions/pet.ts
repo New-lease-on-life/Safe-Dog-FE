@@ -42,3 +42,57 @@ export const registerPet = async () => {
   });
   return data;
 };
+
+export const getPetNoteById = async (
+  id: number,
+): Promise<{
+  id: number;
+  content: string;
+}> => {
+  return serverApi.get<{
+    id: number;
+    content: string;
+  }>(`/api/pet-notes?petId=${id}`);
+};
+
+export const deletePetNoteById = async (
+  id: number,
+): Promise<{
+  id: number;
+  content: string;
+}> => {
+  return serverApi.delete<{
+    id: number;
+    content: string;
+  }>(`/api/pet-notes?petId=${id}`);
+};
+
+export const postPetNoteBy = async ({
+  petId,
+  noteDate,
+  content,
+}: {
+  petId: number;
+  noteDate: Date;
+  content: string;
+}): Promise<{
+  id: number;
+  petId: number;
+  noteDate: Date;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+}> => {
+  return serverApi.post<{
+    id: number;
+    petId: number;
+    noteDate: Date;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }>(`/api/pet-notes`, {
+    petId,
+    noteDate,
+    content,
+  });
+};
