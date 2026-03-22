@@ -5,6 +5,54 @@ import { CommonLayout } from "@/widgets/CommonLayout";
 import { Button } from "@/shared/ui/button";
 import { X, Mars, Venus } from "lucide-react";
 import { Invitation, InvitationGroup } from "@/shared/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const LoginRequiredDialog = ({
+  open,
+  onClose,
+  inviteCode,
+}: {
+  open: boolean;
+  onClose: () => void;
+  inviteCode: string;
+}) => {
+  const router = useRouter();
+
+  const handleConfirm = () => {
+    router.push(`/login?inviteCode=${inviteCode}`);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-sm rounded-2xl text-center">
+        <DialogHeader>
+          <div className="flex justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+              <span className="text-2xl">!</span>
+            </div>
+          </div>
+          <DialogTitle className="text-center">
+            로그인이 필요합니다.
+          </DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-gray-500">
+          원활한 이용을 위해 로그인 페이지로 이동합니다.
+        </p>
+        <Button
+          className="w-full h-12 rounded-xl bg-gray-800 text-white"
+          onClick={handleConfirm}
+        >
+          확인
+        </Button>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 interface Props {
   invitation: Invitation;
@@ -30,7 +78,6 @@ const GroupPreview = ({
       </p>
 
       <div className="w-full bg-gray-50 rounded-2xl p-6 flex flex-col items-center gap-4">
-        {/* 펫 프로필 */}
         <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden">
           {group.pet.profileImageUrl && (
             <img
@@ -41,7 +88,6 @@ const GroupPreview = ({
           )}
         </div>
 
-        {/* 펫 정보 */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200">
           {group.pet.gender === "MALE" ? (
             <Mars size={16} className="text-blue-400" />
@@ -53,8 +99,6 @@ const GroupPreview = ({
             {group.pet.breed} {group.pet.age}
           </span>
         </div>
-
-        {/* 공동보호자 */}
         <div className="w-full">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-2xl">🐾</span>
@@ -99,11 +143,12 @@ const GroupPreview = ({
 export const InvitationPage = ({ invitation, isLoggedIn, group }: Props) => {
   const router = useRouter();
   const [showGroup, setShowGroup] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const handleJoin = () => {
     if (isLoggedIn) {
       setShowGroup(true);
     } else {
-      router.push(`/signup?inviteCode=${invitation.code}`);
+      setShowLoginDialog(true); // router.push 대신 dialog 표시
     }
   };
 
@@ -156,6 +201,11 @@ export const InvitationPage = ({ invitation, isLoggedIn, group }: Props) => {
           공동양육 합류하기
         </Button>
       </div>
+      <LoginRequiredDialog
+        open={showLoginDialog}
+        onClose={() => setShowLoginDialog(false)}
+        inviteCode={invitation.code}
+      />
     </CommonLayout>
   );
 };
