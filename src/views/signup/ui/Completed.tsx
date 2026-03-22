@@ -1,10 +1,18 @@
 import { Button } from "@/shared/ui/button";
 import { useRouter } from "next/navigation";
+import { testLogin } from "@/shared/actions/auth";
+
 export default function Completed() {
   const router = useRouter();
+
+  const handleStart = async () => {
+    await testLogin("test@gmail.com");
+    router.push("/home");
+  };
+
   return (
     <div className="flex flex-col m-6 h-screen items-center gap-4">
-      <div className=" flex flex-col h-full justify-center">
+      <div className="flex flex-col h-full justify-center">
         <div className="text-2xl font-bold text-center">
           <p>회원가입이</p>
           <p>완료되었습니다!</p>
@@ -15,9 +23,8 @@ export default function Completed() {
         </div>
       </div>
       <Button
-        type="submit"
         className="w-full h-12 mb-4 rounded-2xl text-lg mt-auto"
-        onClick={() => router.push("/")}
+        onClick={handleStart}
       >
         홈으로
       </Button>

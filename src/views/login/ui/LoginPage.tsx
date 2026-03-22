@@ -13,7 +13,7 @@ export const LoginPage = () => {
     window.location.href = `${oauth_url}/google`;
   };
   const test = async () => {
-    const response = await testLogin("test@gmail.com");
+    await testLogin("test@gmail.com");
   };
   return (
     <div className="flex flex-col w-full gap-2 p-4 items-center ">
@@ -21,22 +21,14 @@ export const LoginPage = () => {
       <div className="whitespace-pre-line text-center font-semibold text-xl">
         지켜줄개로 {"\n"} 아이의 건강을 지켜주세요
       </div>
-      <Button
-        className="w-72 rounded-full h-12"
-        onClick={() => handleLogin("GOOGLE")}
-      >
-        구글 로그인
-      </Button>
+
       <Button
         className="w-72 rounded-full h-12"
         onClick={() => handleLogin("naver")}
       >
         네이버 로그인
       </Button>
-      <Button
-        className="w-72 rounded-full h-12"
-        onClick={() => handleLogin("kakao")}
-      >
+      <Button className="w-72 rounded-full h-12" onClick={test}>
         카카오 로그인
       </Button>
       <Button
