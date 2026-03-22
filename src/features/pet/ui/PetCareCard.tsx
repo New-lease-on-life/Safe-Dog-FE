@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { RequestDialog } from "@/features/care/ui/RequestDialog";
 import { CareLog, Guardian } from "@/shared/types";
 import { DiseaseCareType } from "@/views/pet-note/model/type";
-
+import { useRouter } from "next/navigation";
 const DISEASE_TYPES: DiseaseCareType[] = [
   "heart",
   "kidney",
@@ -56,13 +56,7 @@ const CareList = ({
   const completedCount = currentLogs.filter((log) => log.completed).length;
   const totalCount = currentLogs.length;
 
-  const formatTime = (isoString?: string) => {
-    if (!isoString) return "";
-    const date = new Date(isoString);
-    const h = date.getHours().toString().padStart(2, "0");
-    const m = date.getMinutes().toString().padStart(2, "0");
-    return `${h}시 ${m}분 완료`;
-  };
+  const router = useRouter();
 
   return (
     <>
@@ -152,6 +146,7 @@ const CareList = ({
           <Button
             variant="outline"
             className="mt-4 w-full h-14 rounded-full border-dashed border-gray-300 text-gray-400 text-base font-semibold bg-transparent"
+            onClick={() => router.push("/pet-note")}
           >
             + 체크리스트 추가하기
           </Button>

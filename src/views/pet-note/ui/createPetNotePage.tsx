@@ -75,8 +75,10 @@ const PrevButton = ({ mode, setMode }: PrevButtonProps) => {
     </button>
   );
 };
-
-export const CreatePetNotePage = () => {
+interface Props {
+  petId: number;
+}
+export const CreatePetNotePage = ({ petId }: Props) => {
   const {
     mode,
     setMode,
@@ -92,6 +94,7 @@ export const CreatePetNotePage = () => {
     setDiseaseData,
     apiTemplates,
   } = useCreateNoteState();
+  const router = useRouter();
   return (
     <CommonLayout>
       <Header
@@ -186,6 +189,7 @@ export const CreatePetNotePage = () => {
           className="w-full h-14 rounded-full"
           onClick={() => {
             console.log(apiTemplates);
+            router.push("/pet-note");
           }}
         >
           저장하기

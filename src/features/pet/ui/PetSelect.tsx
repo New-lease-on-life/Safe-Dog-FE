@@ -9,7 +9,7 @@ import {
 } from "@/shared/ui/sheet";
 import { Button } from "@/shared/ui/button";
 import { ChevronDown, Pencil } from "lucide-react";
-import { Pet } from "@/shared/actions/pet";
+import { Pet } from "@/shared/types";
 
 const TABS = [
   { key: "my", label: "내가 등록한 반려동물" },

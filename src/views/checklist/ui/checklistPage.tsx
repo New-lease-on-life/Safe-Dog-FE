@@ -2,7 +2,7 @@ import { CommonLayout } from "@/widgets/CommonLayout";
 import { Header } from "@/widgets/Header";
 import { getPetList } from "@/entities/pet/api/pet";
 import { PetProfileSwiperWrapper } from "@/features/profileSwiper/ui/PetProfileSwiperWrapper";
-export const PetNotePage = async () => {
+export const CheckListPage = async () => {
   const petList = await getPetList();
   return (
     <>
