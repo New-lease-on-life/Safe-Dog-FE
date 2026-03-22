@@ -1,4 +1,5 @@
 import { Guardian, Pet, CareLog, User } from "../types";
+import { Invitation } from "../types";
 export const MOCK_USER: User = {
   id: 1,
   email: "test@gmail.com",
@@ -183,4 +184,14 @@ export const MOCK_GUARDIANS: Guardian[] = [
   { id: 3, userId: 3, nickname: "박호준", profileImageUrl: "" },
   { id: 4, userId: 4, nickname: "이경욱", profileImageUrl: "" },
   { id: 5, userId: 5, nickname: "박호", profileImageUrl: "" },
+];
+
+export const MOCK_INVITATIONS: Invitation[] = [
+  {
+    code: "ZchjTy",
+    inviterNickname: "진희",
+    inviterProfileImageUrl: "",
+    inviterRole: "관리자",
+    petName: "돌돌이",
+  },
 ];

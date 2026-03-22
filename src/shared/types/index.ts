@@ -58,3 +58,11 @@ export type Guardian = {
   nickname: string;
   profileImageUrl: string;
 };
+
+export type Invitation = {
+  code: string;
+  inviterNickname: string;
+  inviterProfileImageUrl: string;
+  inviterRole: string;
+  petName: string;
+};
