@@ -48,7 +48,7 @@ export const HomePage = ({
       />
       {/* <ManageGuardians guardians={guardians} /> */}
       <PetStatus />
-      <PetCareCard />
+      <PetCareCard careLogs={careLogs} />
       <BottomNavigation />
     </CommonLayout>
   );
