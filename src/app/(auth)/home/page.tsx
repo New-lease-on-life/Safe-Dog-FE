@@ -1,3 +1,4 @@
+import { HomePage } from "@/views/home/ui/homePage";
 export default function page() {
-  return <div>home</div>;
+  return <HomePage />;
 }

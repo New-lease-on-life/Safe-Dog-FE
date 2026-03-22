@@ -3,6 +3,8 @@ import { Button } from "@/shared/ui/button";
 import { useRouter } from "next/navigation";
 import { testLogin } from "@/shared/actions/auth";
 import { testGet } from "@/shared/actions/auth";
+import { registerPet } from "@/shared/actions/pet";
+import { getMyPets } from "@/shared/actions/pet";
 const oauth_url = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization`;
 export const LoginPage = () => {
   const router = useRouter();
@@ -66,6 +68,12 @@ export const LoginPage = () => {
       </Button>
       <Button className="w-72 rounded-full h-12" onClick={() => testGet()}>
         실험
+      </Button>
+      <Button className="w-72 rounded-full h-12" onClick={() => registerPet()}>
+        실험2
+      </Button>
+      <Button className="w-72 rounded-full h-12" onClick={() => getMyPets()}>
+        실험3
       </Button>
     </div>
   );

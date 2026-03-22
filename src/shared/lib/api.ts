@@ -31,6 +31,8 @@ export const apiClient = async <T>(
   }
 
   if (!response.ok) {
+    const errorBody = await response.text();
+    console.error("API Error:", response.status, errorBody);
     throw new Error(`${response.status} ${response.statusText}`);
   }
 
