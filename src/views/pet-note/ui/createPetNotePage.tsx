@@ -181,13 +181,16 @@ export const CreatePetNotePage = () => {
           })}
         </div>
       )}
-      <Button
-        onClick={() => {
-          console.log(apiTemplates);
-        }}
-      >
-        hi
-      </Button>
+      <div className="m-4">
+        <Button
+          className="w-full h-14 rounded-full"
+          onClick={() => {
+            console.log(apiTemplates);
+          }}
+        >
+          저장하기
+        </Button>
+      </div>
     </CommonLayout>
   );
 };
