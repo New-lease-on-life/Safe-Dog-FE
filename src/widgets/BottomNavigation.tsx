@@ -1,18 +1,43 @@
-import { ReactNode } from "react";
-type NavigationPathType = {
-  title: string;
-  path: string;
-  icon: string;
-};
-interface IBottomNavigationProps {
-  // 임시 optional 처리
-  paths?: NavigationPathType[];
-}
+"use client";
+import { useRouter, usePathname } from "next/navigation";
+import { Home, BookOpen, LogOut, Info } from "lucide-react";
+
+const NAV_ITEMS = [
+  { label: "홈", path: "/home", icon: Home },
+  { label: "반려노트", path: "/pet-note", icon: BookOpen },
+  { label: "로그아웃", path: "/login", icon: LogOut },
+  { label: "정보", path: "/info", icon: Info },
+];
+
 export const BottomNavigation = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
-    <div className="bg-white p-4 pb-12">
-      <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between px-6 h-20 bg-gray-600 rounded-full">
-        <p className="text-white"> Bottom Navigation(developing)</p>
+    <div className="fixed bottom-6 left-4 right-4 z-50">
+      <div className="flex justify-between items-center bg-gray-700 rounded-full px-6 py-3 shadow-lg">
+        {NAV_ITEMS.map(({ label, path, icon: Icon }) => {
+          const isActive = pathname === path;
+          return (
+            <button
+              key={path}
+              onClick={() => router.push(path)}
+              className="flex flex-col items-center gap-1 flex-1"
+            >
+              <Icon
+                size={22}
+                className={isActive ? "text-white" : "text-gray-400"}
+              />
+              <span
+                className={`text-xs ${
+                  isActive ? "text-white font-semibold" : "text-gray-400"
+                }`}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
