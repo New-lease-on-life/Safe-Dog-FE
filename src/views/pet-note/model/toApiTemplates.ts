@@ -1,7 +1,5 @@
 import { BasicCareType, DiseaseCareType } from "./type";
 
-// ─── API 타입 ───────────────────────────────────────────────
-
 type TimeSlot = "MORNING" | "LUNCH" | "EVENING" | "CUSTOM";
 type FoodType = "DRY" | "WET" | "MIXED";
 type RepeatUnit = "DAY" | "MONTH" | "YEAR";
@@ -30,8 +28,6 @@ export interface ApiCareTemplate {
   items: ApiCareTemplateItem[];
 }
 
-// ─── 기본값 ──────────────────────────────────────────────────
-
 const BASE_TEMPLATE: Omit<ApiCareTemplate, "careType"> = {
   title: null,
   timeSlot: null,
@@ -55,8 +51,6 @@ const BASE_ITEM: ApiCareTemplateItem = {
   sortOrder: 0,
 };
 
-// ─── 매핑 테이블 ──────────────────────────────────────────────
-
 const TIME_SLOT_MAP: Record<string, TimeSlot> = {
   아침: "MORNING",
   점심: "LUNCH",
@@ -79,8 +73,6 @@ export const DISEASE_LABEL_MAP: Record<DiseaseCareType, string> = {
   other: "기타질병",
 };
 
-// ─── 공통 유틸 ────────────────────────────────────────────────
-
 function toTimeSlot(time: string): {
   timeSlot: TimeSlot;
   customTimeSlot: string | null;
@@ -95,8 +87,6 @@ function toAmountUnit(unit: string, customUnit: string): string | null {
   if (unit === "직접입력") return customUnit || null;
   return unit || null;
 }
-
-// ─── 폼별 변환 함수 ───────────────────────────────────────────
 
 function fromMeal(data: unknown): ApiCareTemplate[] {
   const records = data as Array<{
@@ -169,6 +159,7 @@ function fromSupplement(data: unknown): ApiCareTemplate[] {
 }
 
 function fromMedicine(data: unknown): ApiCareTemplate[] {
+  if (!data) return [];
   const { registered, note } = data as {
     registered: { time: string; item: { name: string; count: string } } | null;
     note: string;
@@ -193,6 +184,7 @@ function fromMedicine(data: unknown): ApiCareTemplate[] {
 }
 
 function fromPad(data: unknown): ApiCareTemplate[] {
+  if (!data) return [];
   const { urineUsed, fecesUsed } = data as {
     urineUsed: boolean;
     fecesUsed: boolean;
@@ -242,12 +234,17 @@ function fromWalk(data: unknown): ApiCareTemplate[] {
     ...toTimeSlot(record.time),
     memo: record.note || null,
     items: [
-      { ...BASE_ITEM, amount: Number(record.duration) || null, amountUnit: "분" },
+      {
+        ...BASE_ITEM,
+        amount: Number(record.duration) || null,
+        amountUnit: "분",
+      },
     ],
   }));
 }
 
 function fromWeight(data: unknown): ApiCareTemplate[] {
+  if (!data) return [];
   const { requested } = data as { requested: boolean };
   return [{ ...BASE_TEMPLATE, careType: "WEIGHT", weightRequestOn: requested }];
 }
@@ -256,6 +253,7 @@ function fromDisease(
   diseaseKey: DiseaseCareType,
   data: unknown,
 ): ApiCareTemplate[] {
+  if (!data) return [];
   const { items, memo } = data as {
     items: Array<{ label: string; checked: boolean }>;
     memo: string;
@@ -274,8 +272,6 @@ function fromDisease(
     },
   ];
 }
-
-// ─── 메인 변환 함수 ───────────────────────────────────────────
 
 const BASIC_TRANSFORMERS: Partial<
   Record<BasicCareType, (data: unknown) => ApiCareTemplate[]>
