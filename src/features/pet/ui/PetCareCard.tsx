@@ -5,6 +5,7 @@ import { Button } from "@/shared/ui/button";
 import { CareLog } from "@/shared/actions/pet";
 import { Check } from "lucide-react";
 import { getRelativTime } from "@/shared/lib/date";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 const tabs = ["기본 케어", "질병 케어"];
 type Tab = (typeof tabs)[number];
@@ -21,23 +22,18 @@ const CARE_TYPE_LABELS: Record<string, string> = {
 interface PetCareCardProps {
   careLogs: CareLog[];
 }
-export default function PetCareCard({ careLogs }: PetCareCardProps) {
-  const [activeTab, setActiveTab] = useState("기본 케어");
+const CareList = ({ logs }: { logs: CareLog[] }) => {
   const [activeFilter, setActiveFilter] = useState("ALL");
-
-  const basicLogs = careLogs.filter((log) => log.careType !== "DISEASE");
-  const diseaseLogs = careLogs.filter((log) => log.careType === "DISEASE");
-  const tabLogs = activeTab === "기본 케어" ? basicLogs : diseaseLogs;
 
   const availableTypes = [
     "ALL",
-    ...Array.from(new Set(tabLogs.map((l) => l.careType))),
+    ...Array.from(new Set(logs.map((l) => l.careType))),
   ];
 
   const currentLogs =
     activeFilter === "ALL"
-      ? tabLogs
-      : tabLogs.filter((log) => log.careType === activeFilter);
+      ? logs
+      : logs.filter((log) => log.careType === activeFilter);
 
   const completedCount = currentLogs.filter((log) => log.completed).length;
   const totalCount = currentLogs.length;
@@ -51,115 +47,120 @@ export default function PetCareCard({ careLogs }: PetCareCardProps) {
   };
 
   return (
-    <div className="w-full p-8 bg-white rounded-t-3xl">
-      <div className="mb-4 text-xl font-bold">오늘의 체크리스트</div>
-      <div className="flex ">
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab;
-          return (
+    <Card className="flex flex-col rounded-t-none rounded-b-2xl bg-[#959596] border-none shadow-none">
+      <CardContent className="h-full flex flex-col pt-6 pb-6 px-5">
+        <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
+          {availableTypes.map((type) => (
             <button
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab);
-                setActiveFilter("ALL");
-              }}
-              className={`flex-1 py-3 text-lg font-bold rounded-t-2xl text-white ${
-                isActive ? "bg-[#959596] z-10" : "bg-[#D9D9D9]"
+              key={type}
+              onClick={() => setActiveFilter(type)}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                activeFilter === type
+                  ? "bg-gray-700 text-white border-gray-700"
+                  : "bg-white text-gray-500 border-gray-200"
               }`}
             >
-              {tab}
+              {CARE_TYPE_LABELS[type] ?? type}
             </button>
-          );
-        })}
-      </div>
+          ))}
+        </div>
 
-      <Card className="flex flex-col rounded-t-none rounded-b-2xl bg-[#959596] border-none shadow-none">
-        <CardContent className="h-full flex flex-col pt-6 pb-6 px-5">
-          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
-            {availableTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => setActiveFilter(type)}
-                className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  activeFilter === type
-                    ? "bg-gray-700 text-white border-gray-700"
-                    : "bg-white text-gray-500 border-gray-200"
-                }`}
-              >
-                {CARE_TYPE_LABELS[type] ?? type}
-              </button>
-            ))}
-          </div>
+        <div className="text-sm text-gray-400 mb-3">
+          {completedCount}/{totalCount} 완료
+        </div>
 
-          <div className="text-sm text-gray-400 mb-3">
-            {completedCount}/{totalCount} 완료
-          </div>
-
-          {currentLogs.length === 0 ? (
-            <p className="text-gray-400 text-center py-8">
-              체크리스트를 추가해보세요
+        {currentLogs.length === 0 ? (
+          <>
+            <p className="text-xl text-white whitespace-break-spaces">
+              체크리스트를 추가하여{"\n"}
+              <span className="font-bold">반려견을 케어해보세요!</span>
             </p>
-          ) : (
-            <ul className="flex flex-col divide-y divide-gray-100">
-              {currentLogs.map((log) => (
-                <li key={log.id} className="flex items-center gap-3 py-3">
-                  <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
+          </>
+        ) : (
+          <ul className="flex flex-col divide-y divide-gray-100">
+            {currentLogs.map((log) => (
+              <li key={log.id} className="flex items-center gap-3 py-3">
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
+                    log.completed
+                      ? "bg-gray-600 border-gray-600"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {log.completed && <Check size={12} className="text-white" />}
+                </div>
+
+                <div className="flex flex-col flex-1 min-w-0">
+                  <span
+                    className={`text-sm font-semibold ${
                       log.completed
-                        ? "bg-gray-600 border-gray-600"
-                        : "border-gray-300"
+                        ? "text-gray-400 line-through"
+                        : "text-gray-800"
                     }`}
                   >
-                    {log.completed && (
-                      <Check size={12} className="text-white" />
-                    )}
-                  </div>
-
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <span
-                      className={`text-sm font-semibold ${
-                        log.completed
-                          ? "text-gray-400 line-through"
-                          : "text-gray-800"
-                      }`}
-                    >
-                      {log.title} · {log.content}
+                    {log.title} · {log.content}
+                  </span>
+                  {log.completed && log.completedAt && (
+                    <span className="text-xs text-gray-400 mt-0.5">
+                      {getRelativTime(log.completedAt)}
                     </span>
-                    {log.completed && log.completedAt && (
-                      <span className="text-xs text-gray-400 mt-0.5">
-                        {formatTime(log.completedAt)}
-                      </span>
-                    )}
-                  </div>
-
-                  {log.completed ? (
-                    log.completedByProfileImageUrl ? (
-                      <img
-                        src={log.completedByProfileImageUrl}
-                        alt={log.completedByNickname}
-                        className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" />
-                    )
-                  ) : (
-                    <button className="flex-shrink-0 px-3 py-1.5 rounded-full bg-amber-400 text-white text-xs font-semibold">
-                      요청하기
-                    </button>
                   )}
-                </li>
-              ))}
-            </ul>
-          )}
+                </div>
 
-          <Button
-            variant="outline"
-            className="mt-4 w-full h-14 rounded-full border-dashed border-gray-300 text-gray-400 text-base font-semibold bg-transparent"
-          >
-            + 체크리스트 추가하기
-          </Button>
-        </CardContent>
-      </Card>
+                {log.completed ? (
+                  log.completedByProfileImageUrl ? (
+                    <img
+                      src={log.completedByProfileImageUrl}
+                      alt={log.completedByNickname}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" />
+                  )
+                ) : (
+                  <button className="flex-shrink-0 px-3 py-1.5 rounded-full bg-amber-400 text-white text-xs font-semibold">
+                    요청하기
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <Button
+          variant="outline"
+          className="mt-4 w-full h-14 rounded-full border-dashed border-gray-300 text-gray-400 text-base font-semibold bg-transparent"
+        >
+          + 체크리스트 추가하기
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function PetCareCard({ careLogs }: PetCareCardProps) {
+  const basicLogs = careLogs.filter((log) => log.careType !== "DISEASE");
+  const diseaseLogs = careLogs.filter((log) => log.careType === "DISEASE");
+
+  return (
+    <div className="w-full px-4 pt-6 pb-8 bg-white rounded-t-3xl">
+      <h2 className="text-xl font-bold mb-4">오늘의 체크리스트</h2>
+      <Tabs defaultValue="basic">
+        <TabsList className="w-full">
+          <TabsTrigger value="basic" className="flex-1">
+            기본 케어
+          </TabsTrigger>
+          <TabsTrigger value="disease" className="flex-1">
+            질병 케어
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="basic">
+          <CareList logs={basicLogs} />
+        </TabsContent>
+        <TabsContent value="disease">
+          <CareList logs={diseaseLogs} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
