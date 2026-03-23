@@ -5,12 +5,12 @@ import { testLogin } from "@/shared/actions/auth";
 import { testGet } from "@/shared/actions/auth";
 import { registerPet } from "@/shared/actions/pet";
 import { getMyPets } from "@/shared/actions/pet";
-const oauth_url = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization`;
+const oauth_url = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/naver`;
 export const LoginPage = () => {
   const router = useRouter();
   console.log(process.env.NEXT_PUBLIC_API_URL);
-  const handleLogin = (provider: "GOOGLE" | "naver" | "kakao") => {
-    window.location.href = `${oauth_url}/google`;
+  const handleNaverLogin = () => {
+    window.location.href = oauth_url;
   };
   const test = async () => {
     await testLogin("test@gmail.com");
@@ -22,10 +22,7 @@ export const LoginPage = () => {
         지켜줄개로 {"\n"} 아이의 건강을 지켜주세요
       </div>
 
-      <Button
-        className="w-72 rounded-full h-12"
-        onClick={() => handleLogin("naver")}
-      >
+      <Button className="w-72 rounded-full h-12" onClick={handleNaverLogin}>
         네이버 로그인
       </Button>
       <Button className="w-72 rounded-full h-12" onClick={test}>
