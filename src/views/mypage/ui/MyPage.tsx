@@ -50,10 +50,7 @@ export const MyPage = ({ profile, pets }: Props) => {
           <h2 className="font-semibold text-base mb-3">등록된 반려동물</h2>
           <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-1">
             {pets.map((pet) => (
-              <div
-                key={pet.id}
-                className="flex items-center gap-2 flex-shrink-0"
-              >
+              <div key={pet.id} className="flex items-center gap-2 ">
                 <div className="relative">
                   <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
                     {pet.profileImageUrl && (
@@ -65,7 +62,7 @@ export const MyPage = ({ profile, pets }: Props) => {
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col w-20">
                   <span className="text-sm font-medium mb-1">{pet.name}</span>
                   <span className="text-xs text-gray-400">{pet.breed}</span>
                   {!pet.birthDateUnknown && (
