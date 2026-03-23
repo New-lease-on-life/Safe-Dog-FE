@@ -14,7 +14,7 @@ import {
   FieldSet,
   FieldDescription,
 } from "@/components/ui/field";
-
+import { DISEASE_CARE_ITEMS } from "@/views/pet-note/model/constants";
 export function Step3() {
   const { control, watch, setValue } =
     useFormContext<PetRegistrationFormValues>();
@@ -57,7 +57,6 @@ export function Step3() {
           반려가족을 등록해야 지켜줄개만의 다양한 서비스를 이용할 수 있어요!
         </FieldDescription>
         <FieldGroup>
-          {/* 알레르기 여부 */}
           <Controller
             name="hasAllergy"
             control={control}
@@ -92,7 +91,6 @@ export function Step3() {
             )}
           />
 
-          {/* 알레르기 직접 입력 */}
           {hasAllergy && (
             <Controller
               name="allergy"
@@ -156,59 +154,30 @@ export function Step3() {
             />
           )}
 
-          {/* 질병 */}
           <Controller
             name="diseases"
             control={control}
             render={({ fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>현재 질병</FieldLabel>
-                <div className="flex gap-2">
-                  <Input
-                    value={diseaseInput}
-                    onChange={(e) => setDiseaseInput(e.target.value)}
-                    placeholder="질병을 입력해주세요"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addTag(
-                          "diseases",
-                          diseaseInput,
-                          setDiseaseInput,
-                          diseases,
-                        );
+                <div className="flex flex-wrap gap-2">
+                  {DISEASE_CARE_ITEMS.map((item) => (
+                    <Button
+                      key={item.key}
+                      type="button"
+                      variant={
+                        diseases.includes(item.key) ? "default" : "outline"
                       }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      addTag(
-                        "diseases",
-                        diseaseInput,
-                        setDiseaseInput,
-                        diseases,
-                      )
-                    }
-                  >
-                    추가
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {diseases.map((item) => (
-                    <span
-                      key={item}
-                      className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-sm"
+                      onClick={() => {
+                        const next = diseases.includes(item.key)
+                          ? diseases.filter((v) => v !== item.key)
+                          : [...diseases, item.key];
+                        setValue("diseases", next, { shouldValidate: true });
+                      }}
+                      className="rounded-full"
                     >
-                      {item}
-                      <button
-                        type="button"
-                        onClick={() => removeTag("diseases", item, diseases)}
-                        className="ml-1"
-                      >
-                        ✕
-                      </button>
-                    </span>
+                      {item.label}
+                    </Button>
                   ))}
                 </div>
                 {fieldState.invalid && (
