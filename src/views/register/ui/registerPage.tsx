@@ -88,7 +88,7 @@ export const RegisterPage = () => {
           </DialogHeader>
           <Button
             className="w-full rounded-full h-12"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/home")}
           >
             확인
           </Button>
