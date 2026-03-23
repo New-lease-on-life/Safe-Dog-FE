@@ -1,9 +1,11 @@
+"use client";
+import { useRouter } from "next/navigation";
 import { CommonLayout } from "@/widgets/CommonLayout";
 import { Header } from "@/widgets/Header";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Pet, User } from "@/shared/types";
 import { calcAge } from "@/shared/lib/date";
-
+import { BottomNavigation } from "@/widgets/BottomNavigation";
 type Props = {
   profile: User;
   pets: Pet[];
@@ -18,12 +20,16 @@ const MENU_ITEMS = [
 ];
 
 export const MyPage = ({ profile, pets }: Props) => {
+  const router = useRouter();
   return (
     <CommonLayout>
       <Header left={<ChevronLeft />} title="마이페이지" />
 
       <div className="flex flex-col">
-        <button className="flex items-center gap-4 px-6 py-5 border-b border-gray-100">
+        <button
+          onClick={() => router.push("/mypage/edit")}
+          className="flex items-center gap-4 px-6 py-5 border-b border-gray-100"
+        >
           <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
             {profile.profileImageUrl && (
               <img
@@ -89,6 +95,7 @@ export const MyPage = ({ profile, pets }: Props) => {
           ))}
         </div>
       </div>
+      <BottomNavigation />
     </CommonLayout>
   );
 };

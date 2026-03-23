@@ -14,7 +14,7 @@ export const MOCK_USER: User = {
   nickname: "멍멍이집사",
   name: "홍길동",
   birthDate: "1990-01-01",
-  providerType: "LOCAL",
+  providerType: "GOOGLE",
   profileImageUrl: "",
   role: "USER",
   lastSelectedPetId: 1,
