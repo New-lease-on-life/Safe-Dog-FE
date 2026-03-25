@@ -148,19 +148,6 @@ export const GuardiansPage = ({ guardians, inviteCode }: Props) => {
             </div>
           )}
         </div>
-
-        {/* Invitation link */}
-        <div className="mx-5 mt-6">
-          <button
-            onClick={() => router.push(`/invitation?code=${inviteCode}`)}
-            className="w-full flex items-center justify-between h-12 border border-[#E0E0E0] rounded-[8px] px-4"
-          >
-            <span className="text-[14px] font-medium text-[#3D3D3D]">
-              초대 페이지 미리보기
-            </span>
-            <ChevronRight size={18} className="text-[#9E9E9E]" />
-          </button>
-        </div>
       </div>
     </CommonLayout>
   );

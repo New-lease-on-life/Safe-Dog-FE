@@ -11,6 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Image from "next/image";
+import { MOCK_GUARDIANS } from "@/shared/mock/data";
 
 const LoginRequiredDialog = ({
   open,
@@ -79,15 +81,15 @@ const GroupPreview = ({
 
       <div className="w-full bg-gray-50 rounded-2xl p-6 flex flex-col items-center gap-4">
         <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden">
-          {group.pet.profileImageUrl && (
-            <img
-              src={group.pet.profileImageUrl}
-              alt={group.pet.name}
-              className="w-full h-full object-cover"
-            />
-          )}
+          <Image
+            src="/images/dog_profile.png"
+            alt="반려동물 프로필"
+            width={134}
+            height={134}
+            className="w-full h-full object-cover"
+            unoptimized
+          />
         </div>
-
         <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200">
           {group.pet.gender === "MALE" ? (
             <Mars size={16} className="text-blue-400" />
@@ -107,7 +109,7 @@ const GroupPreview = ({
             </span>
           </div>
           <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-            {group.guardians.map((g) => (
+            {MOCK_GUARDIANS.map((g) => (
               <div
                 key={g.id}
                 className="flex flex-col items-center gap-1 flex-shrink-0"
@@ -171,15 +173,13 @@ export const InvitationPage = ({ invitation, isLoggedIn, group }: Props) => {
         <div className="text-6xl">💌</div>
 
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-            {invitation.inviterProfileImageUrl && (
-              <img
-                src={invitation.inviterProfileImageUrl}
-                alt={invitation.inviterNickname}
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
+          <Image
+            src="/mock/profile.svg"
+            alt="초대"
+            width={40}
+            height={40}
+            unoptimized
+          />
           <span className="font-semibold">{invitation.inviterNickname}</span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-white">
             {invitation.inviterRole}

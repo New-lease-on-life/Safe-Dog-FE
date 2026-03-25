@@ -108,7 +108,7 @@ export const MOCK_INVITATION_GROUPS: InvitationGroup[] = [
   {
     code: "ZchjTy",
     pet: {
-      name: "흰둥이",
+      name: "돌돌이",
       breed: "웰시코기",
       age: "4살",
       gender: "MALE",

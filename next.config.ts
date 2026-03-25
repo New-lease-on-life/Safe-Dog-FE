@@ -1,7 +1,9 @@
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  devIndicators: false,
+};
 
 const withSerwist = withSerwistInit({
   swSrc: "src/sw.ts",
