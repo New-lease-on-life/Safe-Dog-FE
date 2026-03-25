@@ -6,7 +6,7 @@ import { Header } from "@/widgets/Header";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { Pet } from "@/shared/types";
 import { calcAge } from "@/shared/lib/date";
-
+import Image from "next/image";
 type Props = {
   myPets: Pet[];
   sharedPets: Pet[];
@@ -65,9 +65,7 @@ export const PetListPage = ({ myPets, sharedPets }: Props) => {
           >
             <div
               className={`w-3 h-3 rounded-full border-2 flex items-center justify-center ${
-                sortOrder === order
-                  ? "border-[#1F1F1F]"
-                  : "border-[#9E9E9E]"
+                sortOrder === order ? "border-[#1F1F1F]" : "border-[#9E9E9E]"
               }`}
             >
               {sortOrder === order && (
@@ -99,13 +97,14 @@ export const PetListPage = ({ myPets, sharedPets }: Props) => {
               className="flex items-center gap-4 px-5 h-[106px] border-b border-[#EEEEEE]"
             >
               <div className="w-16 h-16 rounded-full bg-[#E0E0E0] overflow-hidden flex-shrink-0">
-                {pet.profileImageUrl && (
-                  <img
-                    src={pet.profileImageUrl}
-                    alt={pet.name}
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                <Image
+                  src="/images/dog_profile.png"
+                  alt="반려동물 프로필"
+                  width={134}
+                  height={134}
+                  className="w-full h-full object-cover"
+                  unoptimized
+                />
               </div>
               <div className="flex flex-col gap-1 flex-1 text-left">
                 <span className="text-[16px] font-medium text-[#1F1F1F]">

@@ -91,13 +91,14 @@ export const MyPage = ({ profile, pets, inviteCode = "ZchjTy" }: Props) => {
                   className="flex-shrink-0 w-[240px] h-[100px] border border-[#E0E0E0] rounded-[8px] bg-white flex items-center gap-4 px-4"
                 >
                   <div className="w-16 h-16 rounded-full bg-[#E0E0E0] overflow-hidden flex-shrink-0">
-                    {pet.profileImageUrl && (
-                      <img
-                        src={pet.profileImageUrl}
-                        alt={pet.name}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+                    <Image
+                      src="/images/dog_profile.png"
+                      alt="반려동물 프로필"
+                      width={134}
+                      height={134}
+                      className="w-full h-full object-cover"
+                      unoptimized
+                    />
                   </div>
                   <div className="flex flex-col gap-0.5 text-left">
                     <span className="text-[14px] font-bold text-[#1F1F1F]">

@@ -2,9 +2,9 @@
 import { useState, useMemo } from "react";
 import { BasicCareType, DiseaseCareType, ModeType, CareType } from "./type";
 import { toApiTemplates } from "./toApiTemplates";
-export type TabType = "basic" | "disease";
+export type TabType = "disease" | "basic";
 export const useCreateNoteState = () => {
-  const [careTab, setCareTab] = useState<CareType>("basic");
+  const [careTab, setCareTab] = useState<CareType>("disease");
   const [mode, setMode] = useState<ModeType>("create");
   const [activeBasicNotes, setActiveBasicNotes] = useState<BasicCareType[]>([]);
   const [activeDiseaseNotes, setActiveDiseaseNotes] = useState<

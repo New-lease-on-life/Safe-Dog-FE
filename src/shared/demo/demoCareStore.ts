@@ -1,7 +1,10 @@
-// 시연용
+// ─── 시연용 전역 케어 로그 스토어 ─────────────────────────────────────────────
+// 서버 액션 없이 모듈 레벨 변수로 두 페이지 간 상태를 공유합니다.
+// 실제 서비스에서는 이 파일을 삭제하고 서버 데이터로 교체하세요.
+
 export type DemoCareLog = {
   id: number;
-  careType: string; // BasicCareType | DiseaseCareType
+  careType: string;
   title: string;
   content: string;
   completed: boolean;
@@ -15,44 +18,7 @@ export type DateLogs = {
   disease: DemoCareLog[];
 };
 
-const TODAY = new Date().toISOString().split("T")[0];
-
-const store: Record<string, DateLogs> = {
-  [TODAY]: {
-    basic: [
-      {
-        id: 1,
-        careType: "meal",
-        title: "아침 식사",
-        content: "건식 100g",
-        completed: false,
-      },
-      {
-        id: 2,
-        careType: "walk",
-        title: "산책",
-        content: "20분",
-        completed: false,
-      },
-      {
-        id: 3,
-        careType: "medicine",
-        title: "심장약",
-        content: "1정",
-        completed: false,
-      },
-    ],
-    disease: [
-      {
-        id: 101,
-        careType: "heart",
-        title: "심장 청진",
-        content: "이상 여부 확인",
-        completed: false,
-      },
-    ],
-  },
-};
+const store: Record<string, DateLogs> = {};
 
 let _nextId = 200;
 

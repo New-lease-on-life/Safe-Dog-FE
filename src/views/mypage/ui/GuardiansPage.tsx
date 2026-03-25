@@ -5,7 +5,8 @@ import { CommonLayout } from "@/widgets/CommonLayout";
 import { Header } from "@/widgets/Header";
 import { ArrowLeft, Copy, Check, UserPlus, ChevronRight } from "lucide-react";
 import { Guardian } from "@/shared/types";
-
+import Image from "next/image";
+import { Mars } from "lucide-react";
 type Props = {
   guardians: Guardian[];
   inviteCode: string;
@@ -68,11 +69,36 @@ export const GuardiansPage = ({ guardians, inviteCode }: Props) => {
         <div className="mx-5 mt-6">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[16px] font-bold text-[#1F1F1F]">
-              공동보호자 목록
+              공동보호자 관리
             </span>
             <span className="text-[13px] text-[#9E9E9E]">
               {guardians.length}명
             </span>
+          </div>
+          <div className="flex justify-center mt-4">
+            <div className="w-[120px] h-[120px] rounded-full bg-[#E0E0E0] overflow-hidden">
+              <Image
+                src="/images/dog_profile.png"
+                alt="반려동물 프로필"
+                width={134}
+                height={134}
+                className="w-full h-full object-cover"
+                unoptimized
+              />
+            </div>
+          </div>
+
+          {/* Name badge */}
+          <div className="flex justify-center mt-3">
+            <div className="bg-[#F7F7F7] rounded-[12px] px-5 py-2">
+              <span className="flex items-center gap-2 text-[16px] font-bold text-[#1F1F1F]">
+                <Mars color="blue" />
+                돌돌이
+                <span className="text-xs text-muted-foreground">
+                  웰시코기 11살
+                </span>
+              </span>
+            </div>
           </div>
 
           {guardians.length === 0 ? (
@@ -87,7 +113,7 @@ export const GuardiansPage = ({ guardians, inviteCode }: Props) => {
             </div>
           ) : (
             <div className="flex flex-col gap-0.5">
-              {guardians.map((guardian) => (
+              {guardians.map((guardian, index) => (
                 <div
                   key={guardian.id}
                   className="flex items-center gap-4 h-[68px] border-b border-[#F7F7F7]"
@@ -105,11 +131,17 @@ export const GuardiansPage = ({ guardians, inviteCode }: Props) => {
                       </span>
                     )}
                   </div>
+                  {index === 0 && (
+                    <span className="text-[11px] font-semibold text-white bg-[#9F7248] px-2 py-0.5 rounded-full">
+                      관리자
+                    </span>
+                  )}
                   <span className="flex-1 text-[16px] font-medium text-[#1F1F1F]">
                     {guardian.nickname}
                   </span>
+
                   <button className="text-[13px] text-[#9E9E9E] border border-[#E0E0E0] rounded-full px-3 h-8">
-                    내보내기
+                    {index === 0 ? "관리자 변경" : "연결해제"}
                   </button>
                 </div>
               ))}
@@ -120,9 +152,7 @@ export const GuardiansPage = ({ guardians, inviteCode }: Props) => {
         {/* Invitation link */}
         <div className="mx-5 mt-6">
           <button
-            onClick={() =>
-              router.push(`/invitation?code=${inviteCode}`)
-            }
+            onClick={() => router.push(`/invitation?code=${inviteCode}`)}
             className="w-full flex items-center justify-between h-12 border border-[#E0E0E0] rounded-[8px] px-4"
           >
             <span className="text-[14px] font-medium text-[#3D3D3D]">

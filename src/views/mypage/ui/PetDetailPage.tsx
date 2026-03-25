@@ -5,7 +5,7 @@ import { Header } from "@/widgets/Header";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { Pet } from "@/shared/types";
 import { calcAge } from "@/shared/lib/date";
-
+import Image from "next/image";
 type Props = {
   pet: Pet;
 };
@@ -61,13 +61,14 @@ export const PetDetailPage = ({ pet }: Props) => {
         {/* Avatar */}
         <div className="flex justify-center mt-4">
           <div className="w-[120px] h-[120px] rounded-full bg-[#E0E0E0] overflow-hidden">
-            {pet.profileImageUrl && (
-              <img
-                src={pet.profileImageUrl}
-                alt={pet.name}
-                className="w-full h-full object-cover"
-              />
-            )}
+            <Image
+              src="/images/dog_profile.png"
+              alt="반려동물 프로필"
+              width={134}
+              height={134}
+              className="w-full h-full object-cover"
+              unoptimized
+            />
           </div>
         </div>
 

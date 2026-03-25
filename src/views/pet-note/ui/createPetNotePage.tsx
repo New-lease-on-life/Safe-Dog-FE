@@ -22,7 +22,7 @@ import {
   DISEASE_TEMPLATES,
 } from "@/features/diseaseCare/diseaseCareForm";
 import { SelectDiseaseCare } from "./selectDiseaseCare";
-import { applyTemplates } from "@/shared/demo/demoCareStore"; // ← 경로 조정
+import { saveCareTemplates } from "@/shared/actions/pet";
 
 export interface FormProps {
   onDelete: () => void;
@@ -48,8 +48,8 @@ interface PrevButtonProps {
 }
 
 const TABS: { key: TabType; label: string }[] = [
-  { key: "basic", label: "기본케어" },
   { key: "disease", label: "질병케어" },
+  { key: "basic", label: "기본케어" },
 ];
 
 const DISEASE_KEY_MAP: Record<DiseaseCareType, string> = {
@@ -95,16 +95,8 @@ export const CreatePetNotePage = ({ petId }: Props) => {
 
   const router = useRouter();
 
-  const handleSave = () => {
-    const today = new Date().toISOString().split("T")[0];
-
-    // ── 시연용: demoCareStore에 직접 반영 ──────────────────────────
-    applyTemplates(today, activeBasicNotes, activeDiseaseNotes);
-    // ──────────────────────────────────────────────────────────────
-
-    // 실제 서비스라면 아래 서버 액션도 같이 호출
-    // await saveCareTemplates(petId, activeBasicNotes, activeDiseaseNotes);
-
+  const handleSave = async () => {
+    await saveCareTemplates(petId, activeBasicNotes, activeDiseaseNotes);
     router.push("/pet-note");
   };
 
@@ -131,6 +123,7 @@ export const CreatePetNotePage = ({ petId }: Props) => {
         ))}
       </div>
 
+      {/* select 모드: 각 컴포넌트 내부의 확인 버튼으로 완결 — 저장하기 버튼 없음 */}
       {mode === "select" && careTab === "basic" && (
         <SelectBasicCare
           selected={activeBasicNotes}
@@ -146,74 +139,79 @@ export const CreatePetNotePage = ({ petId }: Props) => {
         />
       )}
 
-      {mode === "create" && careTab === "basic" && (
-        <div className="flex flex-col gap-[14px] px-5 py-2">
-          {activeBasicNotes.map((noteKey) => {
-            const FormComponent = BASIC_FORM_COMPONENTS[noteKey];
-            const label = BASIC_CARE_ITEMS.find(
-              (e) => e.key === noteKey,
-            )?.label;
-            return (
-              <div key={noteKey}>
-                {FormComponent ? (
-                  <FormComponent
-                    onDelete={() => removeBasicNote(noteKey)}
-                    onDataChange={(data) => setBasicData(noteKey, data)}
+      {/* create 모드에서만 폼 + 저장하기 버튼 렌더 */}
+      {mode === "create" && (
+        <>
+          {careTab === "basic" && (
+            <div className="flex flex-col gap-[14px] px-5 py-2">
+              {activeBasicNotes.map((noteKey) => {
+                const FormComponent = BASIC_FORM_COMPONENTS[noteKey];
+                const label = BASIC_CARE_ITEMS.find(
+                  (e) => e.key === noteKey,
+                )?.label;
+                return (
+                  <div key={noteKey}>
+                    {FormComponent ? (
+                      <FormComponent
+                        onDelete={() => removeBasicNote(noteKey)}
+                        onDataChange={(data) => setBasicData(noteKey, data)}
+                      />
+                    ) : (
+                      <div>{label} 폼</div>
+                    )}
+                  </div>
+                );
+              })}
+              <button
+                onClick={() => setMode("select")}
+                className="flex items-center justify-center gap-2 w-full bg-[#F7F7F7] rounded-[8px] px-[10px] py-[8px] text-[#3D3D3D] text-[16px] font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                기본케어 항목 추가
+              </button>
+            </div>
+          )}
+
+          {careTab === "disease" && (
+            <div className="flex flex-col gap-[14px] px-5 py-2">
+              {activeDiseaseNotes.map((noteKey) => {
+                const templateKey = DISEASE_KEY_MAP[noteKey];
+                const template = DISEASE_TEMPLATES.find(
+                  (t) => t.key === templateKey,
+                );
+                if (!template) return null;
+                return (
+                  <DiseaseCareForm
+                    key={noteKey}
+                    template={template}
+                    onDelete={() => removeDiseaseNote(noteKey)}
+                    onDataChange={(data) => setDiseaseData(noteKey, data)}
                   />
-                ) : (
-                  <div>{label} 폼</div>
-                )}
-              </div>
-            );
-          })}
-          <button
-            onClick={() => setMode("select")}
-            className="flex items-center justify-center gap-2 w-full bg-[#F7F7F7] rounded-[8px] px-[10px] py-[8px] text-[#3D3D3D] text-[16px] font-medium"
-          >
-            <Plus className="w-5 h-5" />
-            기본케어 항목 추가
-          </button>
-        </div>
-      )}
+                );
+              })}
+              <button
+                onClick={() => setMode("select")}
+                className="flex items-center justify-center gap-2 w-full bg-[#F7F7F7] rounded-[8px] px-[10px] py-[8px] text-[#3D3D3D] text-[16px] font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                질병케어 항목 추가
+              </button>
+            </div>
+          )}
 
-      {mode === "create" && careTab === "disease" && (
-        <div className="flex flex-col gap-[14px] px-5 py-2">
-          {activeDiseaseNotes.map((noteKey) => {
-            const templateKey = DISEASE_KEY_MAP[noteKey];
-            const template = DISEASE_TEMPLATES.find(
-              (t) => t.key === templateKey,
-            );
-            if (!template) return null;
-            return (
-              <DiseaseCareForm
-                key={noteKey}
-                template={template}
-                onDelete={() => removeDiseaseNote(noteKey)}
-                onDataChange={(data) => setDiseaseData(noteKey, data)}
-              />
-            );
-          })}
-          <button
-            onClick={() => setMode("select")}
-            className="flex items-center justify-center gap-2 w-full bg-[#F7F7F7] rounded-[8px] px-[10px] py-[8px] text-[#3D3D3D] text-[16px] font-medium"
-          >
-            <Plus className="w-5 h-5" />
-            질병케어 항목 추가
-          </button>
-        </div>
+          <div className="flex justify-center px-5 py-4 mt-auto">
+            <Button
+              className="w-[350px] h-[58px] rounded-[30px] bg-primary-600 text-white disabled:bg-[#EEEEEE] disabled:text-[#6B6B6B]"
+              disabled={
+                activeBasicNotes.length === 0 && activeDiseaseNotes.length === 0
+              }
+              onClick={handleSave}
+            >
+              저장하기
+            </Button>
+          </div>
+        </>
       )}
-
-      <div className="flex justify-center px-5 py-4 mt-auto">
-        <Button
-          className="w-[350px] h-[58px] rounded-[30px] bg-primary-600 text-white disabled:bg-[#EEEEEE] disabled:text-[#6B6B6B]"
-          disabled={
-            activeBasicNotes.length === 0 && activeDiseaseNotes.length === 0
-          }
-          onClick={handleSave}
-        >
-          저장하기
-        </Button>
-      </div>
     </CommonLayout>
   );
 };

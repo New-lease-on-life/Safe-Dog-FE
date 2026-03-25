@@ -26,7 +26,7 @@ export const SelectDiseaseCare = ({ selected, toggle, onConfirm }: Props) => {
   const isSelected = (key: DiseaseCareType) => selected.includes(key);
 
   return (
-    <div className="flex flex-col gap-[14px] px-5 py-4 flex-1">
+    <div className="flex flex-col gap-[14px] px-5 py-4 flex-1 justify-between">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 text-[#3D3D3D] text-sm font-medium">
           가이드 보기 <Info width="14" className="text-[#3D3D3D]" />
@@ -34,7 +34,7 @@ export const SelectDiseaseCare = ({ selected, toggle, onConfirm }: Props) => {
         <span className="text-[#6B6B6B] text-xs">*중복 선택 가능</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 overflow-y-auto scrollbar-none pb-32">
+      <div className="grid grid-cols-2 gap-3 overflow-y-auto scrollbar-none pb-32 ">
         {DISEASE_TEMPLATES.map((t) => {
           const key = DISEASE_KEY_MAP[t.key];
           return (
@@ -63,7 +63,7 @@ export const SelectDiseaseCare = ({ selected, toggle, onConfirm }: Props) => {
         <Button
           onClick={onConfirm}
           disabled={selected.length === 0}
-          className="w-30 rounded-[30px] bg-primary-500 text-white disabled:bg-[#EEEEEE] disabled:text-[#6B6B6B]"
+          className="w-[350px] h-[58px] rounded-[30px] bg-primary-600 text-white disabled:bg-[#EEEEEE] disabled:text-[#6B6B6B]"
         >
           {selected.length > 0
             ? `${selected.length}개 선택됨`

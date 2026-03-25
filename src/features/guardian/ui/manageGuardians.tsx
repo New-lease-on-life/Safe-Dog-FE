@@ -8,7 +8,7 @@ interface GuardianListProps {
 
 export const ManageGuardians = ({ guardians }: GuardianListProps) => {
   return (
-    <div className="flex items-center p-4">
+    <div className="flex items-center p-4 mx-3">
       <div className="flex flex-col items-center ">
         <div className="w-10 h-10 bg-[#4c4c4c] rounded-full flex items-center justify-center border border-white">
           <Users className="w-6 h-6 text-white" />

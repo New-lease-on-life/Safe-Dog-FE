@@ -1,17 +1,21 @@
 import { BasicCareType, DiseaseCareType } from "./type";
 
-export const BASIC_CARE_ITEMS: { key: BasicCareType; label: string }[] = [
-  { key: "meal", label: "식사" },
-  { key: "snack", label: "간식" },
-  { key: "supplement", label: "영양제" },
-  { key: "water", label: "급수" },
-  { key: "pad", label: "배변" },
-  { key: "walk", label: "산책" },
-  { key: "weight", label: "체중" },
-  { key: "grooming", label: "미용" },
-  { key: "medicine", label: "복약" },
-  { key: "vaccination", label: "예방/접종" },
-  { key: "etc", label: "기타" },
+export const BASIC_CARE_ITEMS: {
+  key: BasicCareType;
+  label: string;
+  emoji: string;
+}[] = [
+  { key: "meal", label: "식사", emoji: "🍚" },
+  { key: "snack", label: "간식", emoji: "🦴" },
+  { key: "supplement", label: "영양제", emoji: "💊" },
+  { key: "water", label: "급수", emoji: "💧" },
+  { key: "pad", label: "배변", emoji: "🧻" },
+  { key: "walk", label: "산책", emoji: "🐾" },
+  { key: "weight", label: "체중", emoji: "⚖️" },
+  { key: "grooming", label: "미용", emoji: "✂️" },
+  { key: "medicine", label: "복약", emoji: "💉" },
+  { key: "vaccination", label: "예방/접종", emoji: "🩺" },
+  { key: "etc", label: "기타", emoji: "📋" },
 ];
 
 export const DISEASE_CARE_ITEMS: { key: DiseaseCareType; label: string }[] = [

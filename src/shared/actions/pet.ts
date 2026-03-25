@@ -13,13 +13,23 @@ import { Pet, CareLog, User, Memo, Guardian } from "@/shared/types";
 const USE_MOCK = true;
 
 const BASIC_CARE_LABELS: Record<string, string> = {
-  meal: "식사", snack: "간식", supplement: "영양제",
-  medicine: "투약", pad: "배변패드", water: "음수",
-  walk: "산책", weight: "체중",
+  meal: "식사",
+  snack: "간식",
+  supplement: "영양제",
+  medicine: "투약",
+  pad: "배변패드",
+  water: "음수",
+  walk: "산책",
+  weight: "체중",
 };
 const DISEASE_CARE_LABELS: Record<string, string> = {
-  heart: "심장", kidney: "신장", cancer: "암",
-  eye: "안과", cushing: "쿠싱증후군", arthritis: "관절염", other: "기타",
+  heart: "심장",
+  kidney: "신장",
+  cancer: "암",
+  eye: "안과",
+  cushing: "쿠싱증후군",
+  arthritis: "관절염",
+  other: "기타",
 };
 
 export const saveCareTemplates = async (

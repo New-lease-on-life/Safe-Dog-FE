@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Check, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { RequestDialog } from "@/features/care/ui/RequestDialog";
@@ -9,38 +9,7 @@ import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Calendar } from "@/shared/ui/calendar";
 import { CalendarDays } from "lucide-react";
-import {
-  DemoCareLog,
-  DateLogs,
-  getDateLogs,
-  addCareLog,
-} from "@/shared/demo/demoCareStore";
 
-const CARE_TYPE_LABELS: Record<string, string> = {
-  ALL: "전체",
-  meal: "식사",
-  snack: "간식",
-  supplement: "영양제",
-  walk: "산책",
-  grooming: "그루밍",
-  medicine: "투약",
-  heart: "심장",
-  kidney: "신장",
-  cancer: "암",
-  eye: "안과",
-  cushing: "쿠싱증후군",
-  arthritis: "관절염",
-  other: "기타",
-};
-
-const BASIC_TYPES = [
-  "meal",
-  "snack",
-  "supplement",
-  "walk",
-  "grooming",
-  "medicine",
-];
 const DISEASE_TYPES: DiseaseCareType[] = [
   "heart",
   "kidney",
@@ -51,24 +20,43 @@ const DISEASE_TYPES: DiseaseCareType[] = [
   "other",
 ];
 
+const CARE_TYPE_LABELS: Record<string, string> = {
+  ALL: "전체",
+  meal: "식사",
+  snack: "간식",
+  supplement: "영양제",
+  walk: "산책",
+  grooming: "그루밍",
+  medicine: "투약",
+  water: "음수",
+  pad: "배변",
+  weight: "체중",
+  vaccination: "예방접종",
+  etc: "기타",
+  heart: "심장",
+  kidney: "신장",
+  cancer: "암",
+  eye: "안과",
+  cushing: "쿠싱증후군",
+  arthritis: "관절염",
+  other: "기타질병",
+};
+
 type LocalCompletion = {
   profileImageUrl: string;
   nickname: string;
   completedAt: string;
 };
 
-const AddChecklistSheet = ({
-  isDisease,
+// ─── MemoDialog ───────────────────────────────────────────────────────────────
+
+const MemoDialog = ({
   onClose,
-  onAdd,
+  onSave,
 }: {
-  isDisease: boolean;
   onClose: () => void;
-  onAdd: (log: Omit<DemoCareLog, "id" | "completed">) => void;
+  onSave: (content: string) => void;
 }) => {
-  const typeOptions = isDisease ? [...DISEASE_TYPES] : BASIC_TYPES;
-  const [careType, setCareType] = useState(typeOptions[0]);
-  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   return (
@@ -78,89 +66,59 @@ const AddChecklistSheet = ({
         <div className="w-10 h-1 bg-[#E0E0E0] rounded-full mx-auto" />
         <div className="flex items-center justify-between">
           <h3 className="text-[18px] font-semibold text-[#1F1F1F]">
-            체크리스트 추가
+            메모 등록
           </h3>
           <button onClick={onClose}>
             <X size={22} className="text-[#9E9E9E]" />
           </button>
         </div>
-
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-medium text-[#6B6B6B]">
-            케어 종류
+            메모 내용
           </label>
-          <div className="flex gap-2 flex-wrap">
-            {typeOptions.map((t) => (
-              <button
-                key={t}
-                onClick={() => setCareType(t)}
-                className={`h-9 px-4 rounded-full text-[13px] font-medium border transition-colors ${
-                  careType === t
-                    ? "bg-[#1F1F1F] text-white border-[#1F1F1F]"
-                    : "bg-white text-[#6B6B6B] border-[#E0E0E0]"
-                }`}
-              >
-                {CARE_TYPE_LABELS[t]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-[13px] font-medium text-[#6B6B6B]">제목</label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="예: 저녁 식사"
-            className="h-[48px] rounded-[12px] border border-[#E0E0E0] px-4 text-[15px] text-[#1F1F1F] placeholder:text-[#C4C4C4] outline-none focus:border-[#9F7248]"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-[13px] font-medium text-[#6B6B6B]">
-            내용 (선택)
-          </label>
-          <input
+          <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="예: 건식 100g"
-            className="h-[48px] rounded-[12px] border border-[#E0E0E0] px-4 text-[15px] text-[#1F1F1F] placeholder:text-[#C4C4C4] outline-none focus:border-[#9F7248]"
+            placeholder="오늘의 케어 관련 메모를 입력해주세요"
+            rows={5}
+            className="rounded-[12px] border border-[#E0E0E0] px-4 py-3 text-[15px] text-[#1F1F1F] placeholder:text-[#C4C4C4] outline-none focus:border-[#9F7248] resize-none"
           />
         </div>
-
         <button
           onClick={() => {
-            if (!title.trim()) return;
-            onAdd({ careType, title: title.trim(), content: content.trim() });
+            if (!content.trim()) return;
+            onSave(content.trim());
             onClose();
           }}
-          disabled={!title.trim()}
+          disabled={!content.trim()}
           className="h-[54px] rounded-[30px] bg-primary-500 text-white text-[16px] font-medium disabled:opacity-40 transition-opacity"
         >
-          추가하기
+          등록하기
         </button>
       </div>
     </>
   );
 };
 
+// ─── CareList ────────────────────────────────────────────────────────────────
+
 const CareList = ({
   logs,
   guardians,
   isDisease,
-  onAdd,
+  onMemoAdd,
 }: {
-  logs: DemoCareLog[];
+  logs: CareLog[];
   guardians: Guardian[];
   isDisease: boolean;
-  onAdd: (log: Omit<DemoCareLog, "id" | "completed">) => void;
+  onMemoAdd: () => void;
 }) => {
   const [activeFilter, setActiveFilter] = useState("ALL");
-  const [selectedLog, setSelectedLog] = useState<DemoCareLog | null>(null);
   const [completions, setCompletions] = useState<Map<number, LocalCompletion>>(
     new Map(),
   );
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [requested, setRequested] = useState<Set<number>>(new Set());
+  const [selectedLog, setSelectedLog] = useState<CareLog | null>(null);
 
   const availableTypes = [
     "ALL",
@@ -214,6 +172,7 @@ const CareList = ({
           const imgUrl =
             log.completedByProfileImageUrl || local?.profileImageUrl || "";
           const nickname = log.completedByNickname || local?.nickname || "";
+          const isRequested = requested.has(log.id);
 
           return (
             <div
@@ -278,7 +237,16 @@ const CareList = ({
                     </span>
                   </div>
                 )
+              ) : isRequested ? (
+                // 요청 완료 상태 — disabled
+                <button
+                  disabled
+                  className="flex-shrink-0 px-3 h-8 rounded-full text-[12px] font-medium bg-[#E0E0E0] text-[#9E9E9E] cursor-default"
+                >
+                  요청완료
+                </button>
               ) : (
+                // 요청하기 — 클릭 시 dialog 오픈
                 <button
                   onClick={() => setSelectedLog(log)}
                   className="flex-shrink-0 px-3 h-8 rounded-full text-white text-[12px] font-medium bg-[#FFB84C]"
@@ -291,79 +259,56 @@ const CareList = ({
         })}
 
         <button
-          onClick={() => setSheetOpen(true)}
+          onClick={onMemoAdd}
           className="mt-2 h-12 rounded-full border border-dashed border-[#C4C4C4] text-[#919191] text-[14px] font-medium"
         >
-          + 체크리스트 추가하기
+          + 메모 추가하기
         </button>
       </div>
 
+      {/* RequestDialog — 요청 완료 시 해당 log id를 requested에 추가 */}
       {selectedLog && (
         <RequestDialog
           open={!!selectedLog}
           onClose={() => setSelectedLog(null)}
-          onRequestSent={(guardian) => {
-            setCompletions(
-              (p) =>
-                new Map([
-                  ...p,
-                  [
-                    selectedLog.id,
-                    {
-                      profileImageUrl: guardian.profileImageUrl,
-                      nickname: guardian.nickname,
-                      completedAt: new Date().toISOString(),
-                    },
-                  ],
-                ]),
-            );
+          onRequestSent={() => {
+            setRequested((p) => new Set([...p, selectedLog.id]));
             setSelectedLog(null);
           }}
-          careLog={selectedLog as CareLog}
+          careLog={selectedLog}
           guardians={guardians}
-        />
-      )}
-
-      {sheetOpen && (
-        <AddChecklistSheet
-          isDisease={isDisease}
-          onClose={() => setSheetOpen(false)}
-          onAdd={(log) => {
-            onAdd(log);
-            setActiveFilter("ALL");
-          }}
         />
       )}
     </>
   );
 };
 
+// ─── PetCareCard ──────────────────────────────────────────────────────────────
+
 interface PetCareCardProps {
+  careLogs: CareLog[];
   guardians: Guardian[];
   selectedDate: string;
   onDateSelect?: (date: string) => void;
+  onMemoSave?: (content: string) => void;
 }
 
 export default function PetCareCard({
+  careLogs,
   guardians,
   selectedDate,
   onDateSelect,
+  onMemoSave,
 }: PetCareCardProps) {
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const [memoDialogOpen, setMemoDialogOpen] = useState(false);
 
-  // store에서 읽어온 값을 로컬 state로 미러링
-  // — store 자체가 mutable이므로 add 후 강제 리렌더를 위해 version 카운터 사용
-  const [version, setVersion] = useState(0);
-  const bump = useCallback(() => setVersion((v) => v + 1), []);
-
-  const logs: DateLogs = getDateLogs(selectedDate);
-
-  const handleAdd =
-    (kind: "basic" | "disease") =>
-    (log: Omit<DemoCareLog, "id" | "completed">) => {
-      addCareLog(selectedDate, kind, log);
-      bump();
-    };
+  const basicLogs = careLogs.filter(
+    (l) => !DISEASE_TYPES.includes(l.careType as DiseaseCareType),
+  );
+  const diseaseLogs = careLogs.filter((l) =>
+    DISEASE_TYPES.includes(l.careType as DiseaseCareType),
+  );
 
   const handleCalendarSelect = (date: Date | undefined) => {
     if (!date || !onDateSelect) return;
@@ -393,7 +338,6 @@ export default function PetCareCard({
             오늘의 체크리스트
           </h2>
         </div>
-
         <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
           <PopoverTrigger asChild>
             <button
@@ -414,43 +358,52 @@ export default function PetCareCard({
         </Popover>
       </div>
 
-      <Tabs defaultValue="basic">
+      <Tabs defaultValue="disease">
         <div className="mx-5 bg-[#F7F7F7] rounded-[16px_16px_6px_6px] p-1">
           <TabsList className="w-full h-[42px] bg-transparent gap-0 p-0">
-            <TabsTrigger
-              value="basic"
-              className="flex-1 h-full text-[16px] data-[state=active]:bg-white data-[state=active]:text-[#3D3D3D] data-[state=active]:font-bold data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#9E9E9E] data-[state=inactive]:font-medium rounded-[12px_12px_4px_4px] shadow-none"
-            >
-              기본 케어
-            </TabsTrigger>
             <TabsTrigger
               value="disease"
               className="flex-1 h-full text-[16px] data-[state=active]:bg-white data-[state=active]:text-[#3D3D3D] data-[state=active]:font-bold data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#9E9E9E] data-[state=inactive]:font-medium rounded-[12px_12px_4px_4px] shadow-none"
             >
               질병 케어
             </TabsTrigger>
+            <TabsTrigger
+              value="basic"
+              className="flex-1 h-full text-[16px] data-[state=active]:bg-white data-[state=active]:text-[#3D3D3D] data-[state=active]:font-bold data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#9E9E9E] data-[state=inactive]:font-medium rounded-[12px_12px_4px_4px] shadow-none"
+            >
+              기본 케어
+            </TabsTrigger>
           </TabsList>
         </div>
-
-        <TabsContent value="basic" className="mt-1 mx-3">
-          <CareList
-            key={`basic-${selectedDate}-${version}`}
-            logs={logs.basic}
-            guardians={guardians}
-            isDisease={false}
-            onAdd={handleAdd("basic")}
-          />
-        </TabsContent>
         <TabsContent value="disease" className="mt-1 mx-3">
           <CareList
-            key={`disease-${selectedDate}-${version}`}
-            logs={logs.disease}
+            key={`disease-${selectedDate}`}
+            logs={diseaseLogs}
             guardians={guardians}
             isDisease={true}
-            onAdd={handleAdd("disease")}
+            onMemoAdd={() => setMemoDialogOpen(true)}
+          />
+        </TabsContent>
+        <TabsContent value="basic" className="mt-1 mx-3">
+          <CareList
+            key={`basic-${selectedDate}`}
+            logs={basicLogs}
+            guardians={guardians}
+            isDisease={false}
+            onMemoAdd={() => setMemoDialogOpen(true)}
           />
         </TabsContent>
       </Tabs>
+
+      {memoDialogOpen && (
+        <MemoDialog
+          onClose={() => setMemoDialogOpen(false)}
+          onSave={(content) => {
+            onMemoSave?.(content);
+            setMemoDialogOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -23,7 +23,7 @@ export const LoginPage = () => {
         <Button
           className="w-72 rounded-full h-12 mt-12"
           onClick={() => {
-            router.push("/home");
+            router.push("/register");
           }}
         >
           로그인

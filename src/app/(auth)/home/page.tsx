@@ -1,12 +1,25 @@
 import { HomePage } from "@/views/home/ui/homePage";
-import { getMyPets } from "@/shared/actions/pet";
-import { getMyInfo } from "@/shared/actions/pet";
+import { getMyPets, getMyInfo, getCareLogsByDate } from "@/shared/actions/pet";
 import { getGuardians } from "@/shared/actions/guardians";
+
 export default async function page() {
+  const today = new Date().toISOString().split("T")[0];
+
   const [myInfo, pets, guardians] = await Promise.all([
     getMyInfo(),
     getMyPets(),
     getGuardians(1),
   ]);
-  return <HomePage myInfo={myInfo} pets={pets} guardians={guardians} />;
+
+  const petId = pets[0]?.id;
+  const careLogs = petId ? await getCareLogsByDate(petId, today) : [];
+
+  return (
+    <HomePage
+      myInfo={myInfo}
+      pets={pets}
+      guardians={guardians}
+      careLogs={careLogs}
+    />
+  );
 }
